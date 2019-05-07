@@ -1,0 +1,8 @@
+<p>
+  test works!
+  <button (click)="sendRequest()">Button</button>
+</p>
+
+<div class="matrix">
+  <div class="element" *ngFor="let cell of cells" (click)="toggle(cell)" [ngClass]="{'active': cell.value}"></div>
+</div>

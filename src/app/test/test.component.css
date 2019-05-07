@@ -1,0 +1,20 @@
+.matrix {
+    height: 320px;
+    width: 320px;
+    border: solid black 1px;
+    font-size: 0;
+    background-color: #aaaaaa
+}
+
+.matrix .element {
+    width: 37px;
+    height:37px;
+    border: solid #fff 1px;
+    display: inline-block;
+    background-color: #fff;
+    margin: 0.5px;
+}
+
+.matrix .active {
+    background-color:black;
+}
