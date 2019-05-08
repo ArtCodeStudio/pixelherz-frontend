@@ -1,14 +1,16 @@
 <div class="content">
   <div class="designer" >
-    <div class="matrix-controls">
-        <button (click)="clear()">x</button>
+    <div class="controls matrix-controls">
+      <input type="checkbox" [(ngModel)]="brush">
+      <button class="button-right" (click)="clear()"><i class="material-icons">close</i></button>
     </div>
     <div class="matrix">
       <ng-container *ngIf="currentFrame">
         <ng-container *ngFor="let cell of currentFrame.data">
-          <ng-container *ngIf="isInHeart(cell) || !heartShape; then active else inactive"></ng-container>
+          <ng-container *ngIf="isInHeart(cell.position) || !heartShape; then active else inactive"></ng-container>
           <ng-template #active>
-              <div class="element" (click)="paint(cell)" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+            <!--[ngClass]="{'outline': (cell.red+cell.blue*2+cell.green*4) > 800}"-->
+            <div class="element" [ngClass]="{'outline': (cell.red+cell.blue*2+cell.green*4) > 800}" (mouseover)="onHover(cell, $event)" (mousedown)="onMousedown(cell, $event)" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
           </ng-template>
           <ng-template #inactive>
               <div class="element-inactive"></div>
@@ -17,32 +19,32 @@
       </ng-container>
     </div>
     <div class="color-palette">
-        
+        <div class="color" *ngFor="let color of colors" (click)="selectColor(color)" [ngClass]="{'active': this.currentColor == color}" [ngStyle]="{'background-color': 'rgb('+color.red+', '+color.green+', '+color.blue+')'}"></div>
     </div>
     <div class="color-selector">
-      <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+red+', '+green+', '+blue+')'}"></div>
+      <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+currentColor.red+', '+currentColor.green+', '+currentColor.blue+')'}"></div>
       <div class="color-values">
         <div class="color">
-          <input [(ngModel)]="red" class="color-slider color-slider-red" type="range" value="255" min="0" max="255">
-          <input [(ngModel)]="red" (change)="validateRed()" type="number" min="0" max="255" step="1">    
+          <input [(ngModel)]="currentColor.red" class="color-slider color-slider-red" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="currentColor.red" (change)="validateRed()" type="number" min="0" max="255" step="1">    
         </div>
         <div class="color">
-          <input [(ngModel)]="green" class="color-slider color-slider-green" type="range" value="255" min="0" max="255">
-          <input [(ngModel)]="green"  (change)="validateGreen()"type="number" min="0" max="255" step="1">    
+          <input [(ngModel)]="currentColor.green" class="color-slider color-slider-green" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="currentColor.green"  (change)="validateGreen()"type="number" min="0" max="255" step="1">    
         </div>
         <div class="color">
-          <input [(ngModel)]="blue" class="color-slider color-slider-blue" type="range" value="255" min="0" max="255">
-          <input [(ngModel)]="blue" (change)="validateBlue()" type="number" min="0" max="255" step="1">    
+          <input [(ngModel)]="currentColor.blue" class="color-slider color-slider-blue" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="currentColor.blue" (change)="validateBlue()" type="number" min="0" max="255" step="1">    
         </div>
       </div>
     </div>
   </div>
   <div class="frames">
-    <div class="frame-controls">
-        <button (click)="left()">&lt;-</button>
-        <button (click)="deleteFrame()">delete</button>
-        <button (click)="right()">-&gt;</button>
-        <button (click)="addFrame()">+</button>
+    <div class="controls frame-controls">
+        <button (click)="left()"><i class="material-icons">arrow_back</i></button>
+        <button (click)="deleteFrame()"><i class="material-icons">delete</i></button>
+        <button (click)="right()"><i class="material-icons">arrow_forward</i></button>
+        <button class="button-right" (click)="addFrame()"><i class="material-icons">add</i></button>
       </div>
     <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">
       <div class="pixel" *ngFor="let cell of frame.data" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
