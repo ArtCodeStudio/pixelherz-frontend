@@ -1,8 +1,34 @@
-<p>
-  test works!
-  <button (click)="sendRequest()">Button</button>
-</p>
+<div class="content">
+  <div class="designer" >
+    <div class="matrix">
+      <div class="element" *ngFor="let cell of currentFrame.data" (click)="paint(cell)" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+    </div>
+    <button (click)="clear()">clear</button>
+    <button (click)="deleteFrame()" [disabled]="this.frames.length == 1">delete</button>
+    <div class="color-selector">
+      <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+red+', '+green+', '+blue+')'}"></div>
+      <div class="color-values">
+        <div class="color">
+          <input [(ngModel)]="red" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="red" (change)="validateRed()" type="number" min="0" max="255" step="1">    
+        </div>
+        <div class="color">
+          <input [(ngModel)]="green" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="green"  (change)="validateGreen()"type="number" min="0" max="255" step="1">    
+        </div>
+        <div class="color">
+          <input [(ngModel)]="blue" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="blue" (change)="validateBlue()" type="number" min="0" max="255" step="1">    
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="frames">
+    <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">
 
-<div class="matrix">
-  <div class="element" *ngFor="let cell of cells" (click)="toggle(cell)" [ngClass]="{'active': cell.value}"></div>
+    </div>
+    <div class="frame frame-add" (click)="addFrame()">
+      +
+    </div>
+  </div>
 </div>

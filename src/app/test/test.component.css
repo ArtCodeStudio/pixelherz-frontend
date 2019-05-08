@@ -3,7 +3,8 @@
     width: 320px;
     border: solid black 1px;
     font-size: 0;
-    background-color: #aaaaaa
+    background-color: #aaaaaa;
+    margin: auto;
 }
 
 .matrix .element {
@@ -17,4 +18,83 @@
 
 .matrix .active {
     background-color:black;
+}
+
+.color-selector {
+    border:solid black 1px;
+    width:320px;
+    margin: auto;
+}
+.color-selector .color {
+    height:61px;
+}
+.color-selector input {
+    display: inline;
+    margin: 20px;
+    vertical-align: middle;
+}
+.color-preview {
+    height: 150px;
+    width: 45px;
+    margin: 20px 10px 20px 20px;
+    border: solid black 1px;
+    display: inline-block;
+}
+.color-slider {
+    width: 90px;
+}
+.color-values {
+    width: 240px;
+    float: right;
+}
+
+.frame {
+    height: 40px;
+    width: 40px;
+    margin: 10px;
+    border: solid black 1px;
+    cursor: pointer;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: center;
+}
+
+.designer {
+    padding: 20px;
+    margin-left: 10px;
+    border: solid black 1px;
+    margin-top: 10px;
+    flex: 1;
+}
+
+.frames {
+    padding: 20px;
+    margin-left: 10px;
+    border: solid black 1px;
+    margin-right: 20px;
+    min-width: 300px;
+    flex-direction: row;
+    margin-top: 10px;
+    flex: 4;
+    
+}
+
+.frame-selected {
+    border: solid black 3px;
+    height: 40px;
+    margin: 8px;
+    width: 40px;
+}
+
+.frame-add {
+    font-size: 50px;
+    text-align: center;
+    line-height: 43px;
 }
