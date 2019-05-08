@@ -1,34 +1,54 @@
 <div class="content">
   <div class="designer" >
-    <div class="matrix">
-      <div class="element" *ngFor="let cell of currentFrame.data" (click)="paint(cell)" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+    <div class="matrix-controls">
+        <button (click)="clear()">x</button>
     </div>
-    <button (click)="clear()">clear</button>
-    <button (click)="deleteFrame()" [disabled]="this.frames.length == 1">delete</button>
+    <div class="matrix">
+      <ng-container *ngIf="currentFrame">
+        <ng-container *ngFor="let cell of currentFrame.data">
+          <ng-container *ngIf="isInHeart(cell) || !heartShape; then active else inactive"></ng-container>
+          <ng-template #active>
+              <div class="element" (click)="paint(cell)" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+          </ng-template>
+          <ng-template #inactive>
+              <div class="element-inactive"></div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div class="color-palette">
+        
+    </div>
     <div class="color-selector">
       <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+red+', '+green+', '+blue+')'}"></div>
       <div class="color-values">
         <div class="color">
-          <input [(ngModel)]="red" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="red" class="color-slider color-slider-red" type="range" value="255" min="0" max="255">
           <input [(ngModel)]="red" (change)="validateRed()" type="number" min="0" max="255" step="1">    
         </div>
         <div class="color">
-          <input [(ngModel)]="green" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="green" class="color-slider color-slider-green" type="range" value="255" min="0" max="255">
           <input [(ngModel)]="green"  (change)="validateGreen()"type="number" min="0" max="255" step="1">    
         </div>
         <div class="color">
-          <input [(ngModel)]="blue" class="color-slider" type="range" value="255" min="0" max="255">
+          <input [(ngModel)]="blue" class="color-slider color-slider-blue" type="range" value="255" min="0" max="255">
           <input [(ngModel)]="blue" (change)="validateBlue()" type="number" min="0" max="255" step="1">    
         </div>
       </div>
     </div>
   </div>
   <div class="frames">
+    <div class="frame-controls">
+        <button (click)="left()">&lt;-</button>
+        <button (click)="deleteFrame()">delete</button>
+        <button (click)="right()">-&gt;</button>
+        <button (click)="addFrame()">+</button>
+      </div>
     <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">
-
+      <div class="pixel" *ngFor="let cell of frame.data" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
     </div>
-    <div class="frame frame-add" (click)="addFrame()">
-      +
-    </div>
+    <!--
+          <div class="frame frame-add" (click)="addFrame()">+</div>
+    -->
   </div>
 </div>

@@ -3,27 +3,33 @@
     width: 320px;
     border: solid black 1px;
     font-size: 0;
-    background-color: #aaaaaa;
+    background-color: #aaa;
     margin: auto;
+    margin-top: 10px;
 }
 
 .matrix .element {
-    width: 37px;
-    height:37px;
+    width: 36px;
+    height:36px;
     border: solid #fff 1px;
     display: inline-block;
-    background-color: #fff;
-    margin: 0.5px;
+    margin: 1px;
+    cursor: pointer;
 }
 
-.matrix .active {
-    background-color:black;
+.matrix .element-inactive {
+    width: 40px;
+    height:40px;
+    border: none;
+    background-color: #fff;
+    display: inline-block;
 }
 
 .color-selector {
     border:solid black 1px;
     width:320px;
     margin: auto;
+    margin-top: 20px;
 }
 .color-selector .color {
     height:61px;
@@ -43,6 +49,28 @@
 .color-slider {
     width: 90px;
 }
+
+.color-slider::-webkit-slider-runnable-track {
+    height: 2px;
+}
+
+.color-slider-red::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg,#000000, #ff0000);
+}
+
+.color-slider-green::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg,#000000, #00ff00);
+}
+
+.color-slider-blue::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg,#000000, #0000ff);
+}
+
+.color-slider::-webkit-slider-thumb {
+  position: relative;
+  bottom: 10px;
+  cursor: grab;
+}
 .color-values {
     width: 240px;
     float: right;
@@ -51,11 +79,49 @@
 .frame {
     height: 40px;
     width: 40px;
+    padding: 1px;
     margin: 10px;
     border: solid black 1px;
     cursor: pointer;
     vertical-align: middle;
     display: inline-block;
+    font-size: 0;
+}
+
+.matrix-controls {
+    height: 40px;
+    padding: 1px;
+    border: solid black 1px;
+}
+
+.frame-controls {
+    height: 40px;
+    padding: 1px;
+    margin: 10px;
+    margin-top: 0px;
+    border: solid black 1px;
+}
+
+.matrix-controls button {
+    float: right;
+    height: 38px;
+    width: 38px;
+    margin: 1px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.matrix-controls button:hover {
+    background-color: #aaaaaa;
+}
+
+.matrix-controls button:focus {
+    outline: none;
+}
+
+.matrix-controls button:active {
+    background-color: #aaaaaa;
 }
 
 .content {
@@ -68,33 +134,40 @@
 
 .designer {
     padding: 20px;
-    margin-left: 10px;
+    margin: 10px;
     border: solid black 1px;
-    margin-top: 10px;
     flex: 1;
+    height: 620px;
 }
 
 .frames {
     padding: 20px;
-    margin-left: 10px;
+    margin: 10px;
     border: solid black 1px;
-    margin-right: 20px;
     min-width: 300px;
     flex-direction: row;
-    margin-top: 10px;
     flex: 4;
-    
+    height: 620px;
+    overflow: auto;
+}
+
+
+.frame .pixel {
+    width: 5px;
+    height:5px;
+    display: inline-block;
 }
 
 .frame-selected {
-    border: solid black 3px;
+    border: solid black 2px;
     height: 40px;
-    margin: 8px;
+    margin: 9px;
     width: 40px;
 }
 
 .frame-add {
     font-size: 50px;
     text-align: center;
+    user-select: none;
     line-height: 43px;
 }
