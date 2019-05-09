@@ -2,6 +2,7 @@
   <div class="designer" >
     <div class="controls matrix-controls">
       <input type="checkbox" [(ngModel)]="brush">
+      <input min="0" step="1" id="frame-duration" type="number" *ngIf="currentFrame" [(ngModel)]="currentFrame.duration">
       <button class="button-right" (click)="clear()"><i class="material-icons">close</i></button>
     </div>
     <div class="matrix">
@@ -22,7 +23,9 @@
         <div class="color" *ngFor="let color of colors" (click)="selectColor(color)" [ngClass]="{'active': this.currentColor == color}" [ngStyle]="{'background-color': 'rgb('+color.red+', '+color.green+', '+color.blue+')'}"></div>
     </div>
     <div class="color-selector">
-      <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+currentColor.red+', '+currentColor.green+', '+currentColor.blue+')'}"></div>
+      <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+currentColor.red+', '+currentColor.green+', '+currentColor.blue+')'}">
+          <div>{{getColorCode()}}</div>
+      </div>
       <div class="color-values">
         <div class="color">
           <input [(ngModel)]="currentColor.red" class="color-slider color-slider-red" type="range" value="255" min="0" max="255">
@@ -41,9 +44,10 @@
   </div>
   <div class="frames">
     <div class="controls frame-controls">
-        <button (click)="left()"><i class="material-icons">arrow_back</i></button>
-        <button (click)="deleteFrame()"><i class="material-icons">delete</i></button>
-        <button (click)="right()"><i class="material-icons">arrow_forward</i></button>
+        <button (click)="left()" [disabled]="this.frames.indexOf(this.currentFrame) == 0"><i class="material-icons">arrow_back</i></button>
+        <button (click)="deleteFrame()" [disabled]="this.frames.length == 1"><i class="material-icons">delete</i></button>
+        <button (click)="right()" [disabled]="this.frames.indexOf(this.currentFrame) == this.frames.length-1"><i class="material-icons">arrow_forward</i></button>
+        <button (click)="sendRequest()"><i class="material-icons">cloud_upload</i></button>
         <button class="button-right" (click)="addFrame()"><i class="material-icons">add</i></button>
       </div>
     <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">

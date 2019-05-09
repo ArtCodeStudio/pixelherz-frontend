@@ -197,7 +197,7 @@
     width: 60px;
     padding: 1px;
     margin: 5px;
-    border: solid var(--background) 1px;
+    border: solid black 1px;
     border-radius: 5px;
     cursor: pointer;
     vertical-align: middle;
@@ -227,7 +227,7 @@
 
 
 .frame-selected {
-    border: solid var(--background) 2px;
+    border: solid black 2px;
     border-radius: 5px;
     margin: 4px;
 }
