@@ -22,3 +22,40 @@ body {
     color: var(--lighter);
     font-family: 'Roboto', sans-serif;
 }
+
+.controls button {
+    height: 38px;
+    text-align: center;
+    min-width: 38px;
+    display: inline-block;
+    margin: 1px;
+    cursor: pointer;
+    border: none;
+    border: solid 1px black;
+    user-select: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--accent);
+    transition: all 0.1s ease-in-out;
+}
+.controls button i {
+    width: 24px;
+    vertical-align: middle;
+}
+
+.button-right {
+    float: right;
+}
+
+.controls button:hover {
+    background-color: var(--accent);
+    color: var(--primary);
+}
+
+.controls button:focus {
+    outline: none;
+}
+
+.controls button:active {
+    background-color: #8d8d8d;
+}

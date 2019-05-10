@@ -1,0 +1,27 @@
+<div class="content">
+  <div class="animations">
+    <div class="controls" *ngFor="let animation of animations" [ngClass]="{'selected': currentAnimation == animation}">
+      <div class="text" (click)="selectAnimation(animation)">
+          <span >{{animation.name}}</span>
+      </div>
+    </div>
+    <div class="controls new" [ngClass]="{'selected': currentAnimation == undefined}">
+        <div class="text" (click)="new()">
+            <i class="material-icons">add</i>
+        </div>
+      </div>
+  </div>
+
+  <div class="editor controls">
+    <ng-container *ngIf="currentAnimation">
+        <input type="text" [(ngModel)]="currentAnimation.name">  
+        <button class="button-right" [routerLink]="['animation', currentAnimation.id, 'editor']"><i class="material-icons">brush</i></button>
+        <button class="button-right"><i class="material-icons">delete</i></button>    
+        <button class="button-right"><i class="material-icons">save</i></button>    
+    </ng-container>
+    <ng-container *ngIf="!currentAnimation">
+        <input type="text" placeholder="Name..">  
+        <button class="button-right"><i class="material-icons">add</i></button>
+    </ng-container>
+  </div>
+</div>

@@ -1,8 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatrixCell } from './matrix-cell';
-import { Frame } from './frame';
-import { Color } from './color';
+import { MatrixCell } from '../obj/matrix-cell';
+import { Frame } from '../obj/frame';
+import { Color } from '../obj/color';
+import { Animation } from '../obj/animation';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-test',
@@ -19,24 +21,29 @@ export class TestComponent implements OnInit {
   
   private heartShape: boolean = false;
   private brush: boolean = true;
-
-  constructor(private http: HttpClient) {}
+  
+  private currentAnimation: Animation;
+  
+  constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
   ngOnInit() {
     this.frames = [];
-    this.loadFrames();
-    //loads default color palette
-    this.colors = [
-      new Color(255, 0, 0), 
-      new Color(0, 255, 0), 
-      new Color(0, 0, 255),
-      new Color(255, 102, 0), 
-      new Color(197, 17, 98), 
-      new Color(255, 247, 0), 
-      new Color(0, 255, 255), 
-      new Color(0, 0, 0)
-    ];
-    this.currentColor = this.colors[0];
+    this.route.params.subscribe(params => {
+      this.loadAnimation(params['id']); // (+) converts string 'id' to a number
+
+      //loads default color palette
+      this.colors = [
+        new Color(255, 0, 0), 
+        new Color(0, 255, 0), 
+        new Color(0, 0, 255),
+        new Color(255, 102, 0), 
+        new Color(197, 17, 98), 
+        new Color(255, 247, 0), 
+        new Color(0, 255, 255), 
+        new Color(0, 0, 0)
+      ];
+      this.currentColor = this.colors[0];
+    });
   }
 
   //keydown listener for arrow navigation through frames
@@ -180,20 +187,22 @@ export class TestComponent implements OnInit {
 
   //sends framelist to backend
   sendRequest() {
-    this.http.post("http://192.168.178.231:3000/update/", {id:2, frames:this.frames}).subscribe(res => {
+    this.http.post("http://192.168.178.231:3000/animation/update/", {id:4, frames:this.frames}).subscribe(res => {
       console.log(res);
     });
   }
 
   //loads framelist from backend
-  loadFrames() {
-    this.http.get("http://192.168.178.231:3000/test/").subscribe(res => {
+  loadAnimation(id: any) {
+    this.http.get("http://192.168.178.231:3000/animation?id="+id).subscribe(res => {
       console.log(res);
       if(res['animation'] !== undefined && res['animation'].frames.length > 0) {
+        this.currentAnimation = new Animation(res['animation'].name, id);
+        console.log(this.currentAnimation);
         this.frames = res['animation'].frames;
         this.currentFrame = this.frames[0];
       } else {
-        console.log("abcx");
+        console.log("empty");
         this.addFrame();
       }
     });

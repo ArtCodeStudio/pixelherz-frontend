@@ -1,0 +1,75 @@
+.controls {
+    height: 40px;
+    border-radius: 5px;
+    width: calc(100% - 20px);
+    margin: 10px;
+    border: solid black 1px;
+    vertical-align: middle;
+}
+
+.controls .text {
+    font-size: 1.5em;
+    height: 40px;
+    display: inline-block;
+    vertical-align: baseline;
+    width: calc(100% - 70px);;
+}
+.new {
+    border: dotted gray 1px;
+}
+.selected {
+    border: solid black 1px;
+}
+
+.new .text {
+    margin-top: 6px;
+    margin-left: 6px;
+    display: inline-block;
+    text-align: center;
+}
+
+.selected {
+    background-color: var(--accent);
+    color: var(--primary);
+}
+.controls .text span {
+    vertical-align: sub;
+    margin-left: 20px;
+}
+.controls .text:focus {
+    outline: none;
+}
+.controls .text:hover {
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap-reverse;
+    align-items: flex-end;
+    justify-content: center;
+}
+.animations {
+    border-radius: 3px;
+    width: 450px;
+    height: calc(100%);
+    border: solid 1px black;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 10px;
+    min-height: 200px;
+    flex: 1;
+    max-width: 600px;
+    min-width: 400px;
+
+}
+.editor {
+    margin: 10px;
+    border-radius: 3px;
+    height: 200px;
+    max-width: 600px;
+    min-width: 400px;
+    flex: 2;
+    border: solid 1px black;
+}
