@@ -26,10 +26,13 @@ export class TestComponent implements OnInit {
   
   constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
+  private id: number;
+
   ngOnInit() {
     this.frames = [];
     this.route.params.subscribe(params => {
-      this.loadAnimation(params['id']); // (+) converts string 'id' to a number
+      this.id = Number(params['id']);
+      this.loadAnimation(this.id); // (+) converts string 'id' to a number
 
       //loads default color palette
       this.colors = [
@@ -186,9 +189,12 @@ export class TestComponent implements OnInit {
   }
 
   //sends framelist to backend
+  private loading: boolean;
   sendRequest() {
-    this.http.post("http://192.168.178.231:3000/animation/update/", {id:4, frames:this.frames}).subscribe(res => {
+    this.loading = true;
+    this.http.post("http://192.168.178.231:3000/animation/update/", {animationId:this.id, frames:this.frames}).subscribe(res => {
       console.log(res);
+      this.loading = false;
     });
   }
 

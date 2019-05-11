@@ -16,15 +16,7 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.animations = Array();
-    this.http.get("http://192.168.178.231:3000/animation/list").subscribe(res => {
-      console.log(res);
-      if(res['animations'] !== undefined) {
-        for(let i = 0; i < res['animations'].length; i++) {
-          let animation: Animation = new Animation(res['animations'][i].title, res['animations'][i].id);
-          this.animations[this.animations.length] = animation;
-        }
-      } 
-    });
+    this.loadAnimations();
   }
 
 
@@ -34,5 +26,33 @@ export class MenuComponent implements OnInit {
 
   new() {
     this.currentAnimation = undefined;
+  }
+
+  loadAnimations() {
+    this.http.get("http://192.168.178.231:3000/animation/list").subscribe((res: Animation[]) => {
+      console.log(res);
+      this.animations = Array();
+        for(let i = 0; i < res.length; i++) {
+          let animation: Animation = new Animation(res[i].name, res[i].animationId);
+          this.animations[this.animations.length] = animation;
+        }
+    });
+  }
+
+  private animationName: string;
+
+  createAnimation() {
+    //todo validate input
+    this.http.post("http://192.168.178.231:3000/animation/create", {name: this.animationName}).subscribe(res => {
+      this.loadAnimations(); //todo use response for list
+    });
+  }
+
+
+  delete() {
+    //todo validate input
+    this.http.post("http://192.168.178.231:3000/animation/create", {name: this.animationName}).subscribe(res => {
+      this.loadAnimations(); //todo use response for list
+    });
   }
 }

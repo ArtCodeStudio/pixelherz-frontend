@@ -15,13 +15,13 @@
   <div class="editor controls">
     <ng-container *ngIf="currentAnimation">
         <input type="text" [(ngModel)]="currentAnimation.name">  
-        <button class="button-right" [routerLink]="['animation', currentAnimation.id, 'editor']"><i class="material-icons">brush</i></button>
+        <button class="button-right" [routerLink]="['animation', currentAnimation.animationId, 'editor']"><i class="material-icons">brush</i></button>
         <button class="button-right"><i class="material-icons">delete</i></button>    
         <button class="button-right"><i class="material-icons">save</i></button>    
     </ng-container>
     <ng-container *ngIf="!currentAnimation">
-        <input type="text" placeholder="Name..">  
-        <button class="button-right"><i class="material-icons">add</i></button>
+        <input type="text" [(ngModel)]="animationName" placeholder="Name..">  
+        <button class="button-right" (click)="createAnimation()"><i class="material-icons">add</i></button>
     </ng-container>
   </div>
 </div>

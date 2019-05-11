@@ -59,3 +59,16 @@ body {
 .controls button:active {
     background-color: #8d8d8d;
 }
+
+.controls button[disabled=disabled], .controls button:disabled {
+    cursor: not-allowed;
+    background-color: #d8d8d8;
+}
+.controls button[disabled=disabled]:hover, .controls button:disabled {
+    background-color: #d8d8d8;
+    color:black;
+}
+
+.controls .loading {
+    cursor: progress !important;
+}
