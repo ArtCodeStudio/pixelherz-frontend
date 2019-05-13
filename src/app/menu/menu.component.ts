@@ -51,7 +51,7 @@ export class MenuComponent implements OnInit {
 
   delete() {
     //todo validate input
-    this.http.post("http://192.168.178.231:3000/animation/create", {name: this.animationName}).subscribe(res => {
+    this.http.post("http://192.168.178.231:3000/animation/delete", {id: this.currentAnimation.animationId}).subscribe(res => {
       this.loadAnimations(); //todo use response for list
     });
   }

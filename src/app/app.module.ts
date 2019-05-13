@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { TestComponent } from './test/test.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MenuComponent } from './menu/menu.component';
+import { GridsterModule } from 'angular-gridster2';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MenuComponent } from './menu/menu.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    GridsterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

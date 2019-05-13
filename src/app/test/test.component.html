@@ -1,14 +1,15 @@
 <div class="heading controls">
     <button [routerLink]="['']"><i class="material-icons">arrow_backwards</i></button>
-    <h1 *ngIf="currentAnimation">Editor: {{currentAnimation.name}}</h1>
+    <h1 *ngIf="currentAnimation">{{currentAnimation.name}}</h1>
+    <button class="button-right" (click)="duplicate()"><i class="material-icons">add_to_photos</i></button>
+    <button class="button-right" (click)="sendRequest()" [ngClass]="{'loading': loading}" [disabled]="loading"><i class="material-icons">cloud_upload</i></button>
 </div>
 
 <div class="content">
   <div class="designer" >
     <div class="controls matrix-controls">
-      <input type="checkbox" [(ngModel)]="brush">
-      <input min="0" step="1" id="frame-duration" type="number" *ngIf="currentFrame"  [(ngModel)]="currentFrame.duration">
       <button class="button-right" (click)="clear()"><i class="material-icons">close</i></button>
+      <button class="button-right" (click)="switchMode()"><i class="material-icons">{{brush ? 'format_paint' : 'brush'}}</i></button>
     </div>
     <div class="matrix">
       <ng-container *ngIf="currentFrame">
@@ -25,11 +26,16 @@
       </ng-container>
     </div>
     <div class="color-palette">
-        <div class="color" *ngFor="let color of colors" (click)="selectColor(color)" [ngClass]="{'active': this.currentColor == color}" [ngStyle]="{'background-color': 'rgb('+color.red+', '+color.green+', '+color.blue+')'}"></div>
+        <div class="color" *ngFor="let color of colors" (click)="selectColor(color)" [ngClass]="{'active': this.currentColor == color}">
+          <div [ngStyle]="{'background-color': 'rgb('+color.red+', '+color.green+', '+color.blue+')'}" class="color-element"></div>
+        </div>
     </div>
     <div class="color-selector">
       <div class="color-preview" [ngStyle]="{'background-color': 'rgb('+currentColor.red+', '+currentColor.green+', '+currentColor.blue+')'}">
-          <div>{{getColorCode()}}</div>
+          <div class="color-input" [ngClass]="{'white': !((currentColor.red+currentColor.blue*2+currentColor.green*4) > 800)}">
+              <span>#</span>
+              <input [(ngModel)]="hexValue" (input)="checkHex()" (keydown)="validateHex($event)" value="{{getColorCode()}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"  type="text" maxlength="6">
+          </div>
       </div>
       <div class="color-values">
         <div class="color">
@@ -47,19 +53,19 @@
       </div>
     </div>
   </div>
-  <div class="frames">
+
+   <div class="frames">
     <div class="controls frame-controls">
         <button (click)="left()" [disabled]="this.frames.indexOf(this.currentFrame) == 0"><i class="material-icons">arrow_back</i></button>
-        <button (click)="deleteFrame()" [disabled]="this.frames.length == 1"><i class="material-icons">delete</i></button>
         <button (click)="right()" [disabled]="this.frames.indexOf(this.currentFrame) == this.frames.length-1"><i class="material-icons">arrow_forward</i></button>
-        <button (click)="sendRequest()" [ngClass]="{'loading': loading}" [disabled]="loading"><i class="material-icons">cloud_upload</i></button>
-        <button class="button-right" (click)="addFrame()"><i class="material-icons">add</i></button>
+        <button (click)="deleteFrame()" [disabled]="this.frames.length == 1"><i class="material-icons">delete</i></button>
+        <input min="0" step="0.1" max="99" id="frame-duration" type="number" *ngIf="currentFrame"  [(ngModel)]="currentFrame.duration">
       </div>
-    <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">
-      <div class="pixel" *ngFor="let cell of frame.data" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
-    </div>
-    <!--
-          <div class="frame frame-add" (click)="addFrame()">+</div>
-    -->
+      <div class="frame-list">
+        <div class="frame frame-add" (click)="addFrame()"><i class="add-icon material-icons">add</i></div>
+        <div class="frame" *ngFor="let frame of frames" (click)="loadFrame(frame)" [ngClass]="{'frame-selected': currentFrame == frame}">
+          <div class="pixel" *ngFor="let cell of frame.data" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+        </div>    
+      </div>
   </div>
 </div>

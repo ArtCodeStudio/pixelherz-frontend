@@ -24,21 +24,26 @@ body {
 }
 
 .controls button {
+    vertical-align: bottom;
+}
+
+button {
+    vertical-align: middle;
     height: 38px;
     text-align: center;
-    min-width: 38px;
+    width: 38px;
     display: inline-block;
     margin: 1px;
     cursor: pointer;
     border: none;
     border: solid 1px black;
     user-select: none;
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     background-color: transparent;
     color: var(--accent);
     transition: all 0.1s ease-in-out;
 }
-.controls button i {
+button i {
     width: 24px;
     vertical-align: middle;
 }
@@ -47,26 +52,50 @@ body {
     float: right;
 }
 
-.controls button:hover {
+button:hover {
     background-color: var(--accent);
     color: var(--primary);
 }
 
-.controls button:focus {
+button:focus {
     outline: none;
 }
 
-.controls button:active {
-    background-color: #8d8d8d;
+button:active {
+    transition: none;
+    background-color: #555555;
 }
 
-.controls button[disabled=disabled], .controls button:disabled {
+button[disabled=disabled], .controls button:disabled {
     cursor: not-allowed;
-    background-color: #d8d8d8;
+    color: #8b8b8b;
+    background-color: white;
 }
-.controls button[disabled=disabled]:hover, .controls button:disabled {
-    background-color: #d8d8d8;
-    color:black;
+button[disabled=disabled]:hover, .controls button:disabled {
+    color: #8b8b8b;
+    background-color: white;
+}
+
+input[type=number] {
+    height: 34px;
+    text-align: center;
+    display: inline-block;
+    margin: 1px;
+    font-size: 30px;
+    cursor: pointer;
+    border: none;
+    border: solid 1px black;
+    user-select: none;
+    /*border-radius: 5px;*/
+    background-color: transparent;
+    color: var(--accent);
+    padding-left: 10px;
+    text-align: left;
+    transition: all 0.1s ease-in-out;
+}
+
+input[type=number]:focus {
+    outline: none;
 }
 
 .controls .loading {

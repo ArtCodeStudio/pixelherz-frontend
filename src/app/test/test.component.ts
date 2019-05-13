@@ -5,6 +5,7 @@ import { Frame } from '../obj/frame';
 import { Color } from '../obj/color';
 import { Animation } from '../obj/animation';
 import { ActivatedRoute } from '@angular/router';
+import { GridsterConfig, GridsterItem }  from 'angular-gridster2';
 
 @Component({
   selector: 'app-test',
@@ -24,15 +25,19 @@ export class TestComponent implements OnInit {
   
   private currentAnimation: Animation;
   
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  private hexValue: string = 'FF0000';
 
   private id: number;
 
+
+  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+
   ngOnInit() {
     this.frames = [];
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       this.id = Number(params['id']);
-      this.loadAnimation(this.id); // (+) converts string 'id' to a number
+      
+      await this.loadAnimation(this.id); // (+) converts string 'id' to a number
 
       //loads default color palette
       this.colors = [
@@ -46,6 +51,8 @@ export class TestComponent implements OnInit {
         new Color(0, 0, 0)
       ];
       this.currentColor = this.colors[0];
+
+
     });
   }
 
@@ -153,7 +160,10 @@ export class TestComponent implements OnInit {
     let frame: Frame = new Frame(100, cells);
     this.frames[this.frames.length] = frame;
     this.loadFrame(frame);
-    
+  }
+
+  switchMode() {
+    this.brush = !this.brush;
   }
 
   //moves selected frame upwards in frame array
@@ -199,8 +209,8 @@ export class TestComponent implements OnInit {
   }
 
   //loads framelist from backend
-  loadAnimation(id: any) {
-    this.http.get("http://192.168.178.231:3000/animation?id="+id).subscribe(res => {
+  async loadAnimation(id: any) {
+    await this.http.get("http://192.168.178.231:3000/animation?id="+id).subscribe(res => {
       console.log(res);
       if(res['animation'] !== undefined && res['animation'].frames.length > 0) {
         this.currentAnimation = new Animation(res['animation'].name, id);
@@ -211,12 +221,43 @@ export class TestComponent implements OnInit {
         console.log("empty");
         this.addFrame();
       }
+
     });
+  }
+
+  private allowedValues: string[] = ['ArrowRight', 'ArrowLeft','Backspace', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F'];
+  
+  validateHex(event: KeyboardEvent): boolean {
+    console.log(event);
+    if(event.ctrlKey && event.key === "v") return true;
+    let found = false;
+    this.allowedValues.forEach(v=> {
+      if(event.key === v) found = true;
+    });
+    return found;
+  }
+
+  checkHex() {
+    if(this.hexValue.length == 6) {
+      let res = this.hexToRgb(this.hexValue);
+      this.currentColor.red = res.r;
+      this.currentColor.green = res.g;
+      this.currentColor.blue = res.b;
+    }
+  }
+
+  hexToRgb(hex: string) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   }
 
   //returns hex code of current selected color
   getColorCode(): string {
-    return "#"+this.currentColor.red.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.green.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.blue.toString(16).padStart(2, '0').toUpperCase(); 
+    return this.currentColor.red.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.green.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.blue.toString(16).padStart(2, '0').toUpperCase(); 
   }
 
 }
