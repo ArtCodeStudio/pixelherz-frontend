@@ -8,13 +8,32 @@
 }
 
 .heading h1 {
-    margin: 0 0 0 10px;
+    margin: 0 0 0 20px;
     display: inline-block;
     font-weight: 500;
     vertical-align: middle;
 }
+.text-input {
+    margin-top: 0;
+    margin-left: 21px;
+    font-size: 2em;
+    border: none;
+    width: calc(85% - 190px) !important;
+}
 
+.heading .right {
+    width: 190px;
+    float:right;
+}
+.repeats-input {
+    margin-top: 0;
+    width: 95px !important;
+}
 
+.heading label {
+    vertical-align: super;
+    margin-left: -60px;
+}
 .matrix {
     height: 320px;
     width: 320px;
@@ -48,6 +67,16 @@
     border-radius: 0 0 5px 0;
 }*/
 
+.heading input {
+    vertical-align: bottom;
+    width: 80px;
+    font-size: 2em; 
+    transform: translateX(-1px) translateY(1px);
+}
+.name-group {
+    display: inline;
+}
+
 .matrix .outline {
     width: 34px;
     height:34px;
@@ -80,6 +109,7 @@
 .color-selector input[type=number] {
     width: 80px;
     margin-left: 5px;    
+    font-family: monospace;
     padding-left: 3px;
 }
 .color-input {
@@ -178,7 +208,12 @@
 }
 
 .frame-controls input {
-    width: 82px;
+    width: 110px;
+    font-family: monospace;
+}
+
+.frame-controls label {
+    margin-left: -30px;
 }
 
 .content {

@@ -1,7 +1,10 @@
 <div class="content">
   <div class="animations">
     <div class="controls" *ngFor="let animation of animations" [ngClass]="{'selected': currentAnimation == animation}">
-      <button><i class="material-icons">check</i></button>  
+      <div class="checkbox-container" (click)="changeEnabled(animation)">
+        <i *ngIf="animation.enabled === false" class="material-icons">check_box_outline_blank</i>
+        <i *ngIf="animation.enabled === true" class="material-icons">check_box</i>
+      </div>  
       <div class="text" (click)="selectAnimation(animation)">
         <span class="name">{{animation.name}}</span>
       </div>
@@ -15,6 +18,10 @@
   </div>
 
   <div class="editor controls">
-    
+    <ng-container *ngIf="currentFrame" >
+      <div class="pixels">
+          <div class="pixel" *ngFor="let cell of currentFrame.data" [ngStyle]="{'background-color': 'rgb('+cell.red+', '+cell.green+', '+cell.blue+')'}"></div>
+      </div>
+    </ng-container>
   </div>
 </div>

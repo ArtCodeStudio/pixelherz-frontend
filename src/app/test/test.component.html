@@ -1,9 +1,20 @@
 <div class="heading controls">
-    <button [routerLink]="['']"><i class="material-icons">arrow_backwards</i></button>
-    <h1 *ngIf="currentAnimation">{{currentAnimation.name}}</h1>
-    <button class="button-right" (click)="duplicate()"><i class="material-icons">add_to_photos</i></button>
-    <button class="button-right" (click)="sendRequest()" [ngClass]="{'loading': loading}" [disabled]="loading"><i class="material-icons">cloud_upload</i></button>
-</div>
+
+    <button [routerLink]="['']"><i class="material-icons">navigate_before</i></button>
+
+    <input class="text-input" type="text" [(ngModel)]="currentAnimation.name" (ngModelChange)="this.changes = true">  
+
+    <!--<div class="repeats-group">
+      <h1 id="repeats" (click)="editRepeats = true" *ngIf="currentAnimation && !editRepeats">{{currentAnimation.repeats}}</h1>
+      <input autofocus id="repeats-input" min="0" type="number" *ngIf="editRepeats" [(ngModel)]="currentAnimation.repeats" (ngModelChange)="this.changes = true">  
+    </div>-->
+    <div class="right">
+        <button (click)="duplicate()" [disabled]="duplicateLoading"><i class="material-icons">add_to_photos</i></button>
+        <button (click)="sendRequest()" [ngClass]="{'loading': loading}" [disabled]="loading"><i class="material-icons">cloud_upload</i></button>
+        <input max="99" class="repeats-input" *ngIf="currentAnimation" id="repeats-input" min="1" type="number" [ngModel]="currentAnimation.repeats.toString().padStart(2, '0')" (ngModelChange)="this.changes = true; currentAnimation.repeats = $event">  
+        <label for="repeats-input">Wdh.</label>    
+    </div>
+  </div>
 
 <div class="content">
   <div class="designer" >
@@ -59,7 +70,8 @@
         <button (click)="left()" [disabled]="this.frames.indexOf(this.currentFrame) == 0"><i class="material-icons">arrow_back</i></button>
         <button (click)="right()" [disabled]="this.frames.indexOf(this.currentFrame) == this.frames.length-1"><i class="material-icons">arrow_forward</i></button>
         <button (click)="deleteFrame()" [disabled]="this.frames.length == 1"><i class="material-icons">delete</i></button>
-        <input min="0" step="0.1" max="99" id="frame-duration" type="number" *ngIf="currentFrame"  [(ngModel)]="currentFrame.duration">
+        <input id="frame-duration" min="0" step="0.1" max="99" id="frame-duration" type="number" *ngIf="currentFrame" (ngModelChange)="currentFrame.duration = $event*1000; changes = true" [ngModel]="(currentFrame.duration/1000).toFixed(1).padStart(4, '0')">
+        <label for="frame-duration">s</label>
       </div>
       <div class="frame-list">
         <div class="frame frame-add" (click)="addFrame()"><i class="add-icon material-icons">add</i></div>

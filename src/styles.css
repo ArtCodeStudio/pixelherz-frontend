@@ -36,7 +36,6 @@ button {
     margin: 1px;
     cursor: pointer;
     border: none;
-    border: solid 1px black;
     user-select: none;
     /*border-radius: 5px;*/
     background-color: transparent;
@@ -75,8 +74,8 @@ button[disabled=disabled]:hover, .controls button:disabled {
     color: #8b8b8b;
     background-color: white;
 }
-
-input[type=number] {
+    
+input[type=number]{
     height: 34px;
     text-align: center;
     display: inline-block;
@@ -84,8 +83,8 @@ input[type=number] {
     font-size: 30px;
     cursor: pointer;
     border: none;
-    border: solid 1px black;
     user-select: none;
+    font-family: monospace;
     /*border-radius: 5px;*/
     background-color: transparent;
     color: var(--accent);
@@ -93,8 +92,12 @@ input[type=number] {
     text-align: left;
     transition: all 0.1s ease-in-out;
 }
+input[type=text] {
+    font-family: 'Roboto', sans-serif;
+}
 
-input[type=number]:focus {
+
+input:focus {
     outline: none;
 }
 

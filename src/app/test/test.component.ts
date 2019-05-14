@@ -1,11 +1,13 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, ElementRef, ViewChild, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatrixCell } from '../obj/matrix-cell';
 import { Frame } from '../obj/frame';
 import { Color } from '../obj/color';
 import { Animation } from '../obj/animation';
 import { ActivatedRoute } from '@angular/router';
-import { GridsterConfig, GridsterItem }  from 'angular-gridster2';
+import {Location} from '@angular/common';
+import {DOCUMENT} from '@angular/common';
+import { flushMicrotasks } from '@angular/core/testing';
 
 @Component({
   selector: 'app-test',
@@ -28,33 +30,53 @@ export class TestComponent implements OnInit {
   private hexValue: string = 'FF0000';
 
   private id: number;
+  private changes: boolean;
 
+  private editName: boolean = false;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private location: Location, @Inject(DOCUMENT) private document: Document) {}
 
   ngOnInit() {
+    this.changes = false;
+  
+
     this.frames = [];
+
+
+    //loads default color palette
+    this.colors = Array();
+    for(let i = 0; i < 8; i++) {
+      this.colors[i] = new Color(255, 255, 255);
+    }
+    this.currentColor = this.colors[0];
+
     this.route.params.subscribe(async params => {
       this.id = Number(params['id']);
       
       await this.loadAnimation(this.id); // (+) converts string 'id' to a number
 
-      //loads default color palette
-      this.colors = [
-        new Color(255, 0, 0), 
-        new Color(0, 255, 0), 
-        new Color(0, 0, 255),
-        new Color(255, 102, 0), 
-        new Color(197, 17, 98), 
-        new Color(255, 247, 0), 
-        new Color(0, 255, 255), 
-        new Color(0, 0, 0)
-      ];
-      this.currentColor = this.colors[0];
 
 
     });
   }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification(event: any) {
+      if (this.changes) {
+          event.returnValue =true;
+      }
+  }
+
+  @HostListener('window:click', ['$event'])
+  clickListener(event: MouseEvent) {
+    if (event.target instanceof Element) {
+      console.log(event.target.id);
+      if(event.target.id !== "name-input" && event.target.id !== "name" ) {
+        this.editName = false;
+      }
+    }
+  }
+
 
   //keydown listener for arrow navigation through frames
   @HostListener('document:keydown', ['$event'])
@@ -96,6 +118,7 @@ export class TestComponent implements OnInit {
       cell.red = this.currentColor.red;
       cell.green = this.currentColor.green;
       cell.blue = this.currentColor.blue;
+      this.changes = true;
       console.log(cell);
     }
   }
@@ -125,6 +148,7 @@ export class TestComponent implements OnInit {
       this.currentFrame.data[i].red = 0;
       this.currentFrame.data[i].green = 0;
       this.currentFrame.data[i].blue = 0;
+      this.changes = true;
     }
     
   }
@@ -140,6 +164,7 @@ export class TestComponent implements OnInit {
     let indexOf = this.frames.indexOf(this.currentFrame);
     this.frames.splice(indexOf, 1);
     this.loadFrame(this.frames[Math.min(this.frames.length-1, indexOf)]);
+    this.changes = true;
     
   }
 
@@ -159,6 +184,7 @@ export class TestComponent implements OnInit {
     }
     let frame: Frame = new Frame(100, cells);
     this.frames[this.frames.length] = frame;
+    this.changes = true;
     this.loadFrame(frame);
   }
 
@@ -171,6 +197,7 @@ export class TestComponent implements OnInit {
     let indexOf: number = this.frames.indexOf(this.currentFrame);
     this.frames[indexOf] = this.frames[indexOf-1];
     this.frames[indexOf-1] = this.currentFrame;
+    this.changes = true;
     
   }
 
@@ -179,6 +206,7 @@ export class TestComponent implements OnInit {
     let indexOf: number = this.frames.indexOf(this.currentFrame);
     this.frames[indexOf] = this.frames[indexOf+1];
     this.frames[indexOf+1] = this.currentFrame;
+    this.changes = true;
     
   }
 
@@ -200,11 +228,13 @@ export class TestComponent implements OnInit {
 
   //sends framelist to backend
   private loading: boolean;
+
   sendRequest() {
     this.loading = true;
-    this.http.post("http://192.168.178.231:3000/animation/update/", {animationId:this.id, frames:this.frames}).subscribe(res => {
+    this.http.post("http://192.168.178.231:3000/animation/update/", {animationId:this.id, frames:this.frames, name:this.currentAnimation.name, repeats: this.currentAnimation.repeats}).subscribe(res => {
       console.log(res);
       this.loading = false;
+      this.changes = false;
     });
   }
 
@@ -213,7 +243,7 @@ export class TestComponent implements OnInit {
     await this.http.get("http://192.168.178.231:3000/animation?id="+id).subscribe(res => {
       console.log(res);
       if(res['animation'] !== undefined && res['animation'].frames.length > 0) {
-        this.currentAnimation = new Animation(res['animation'].name, id);
+        this.currentAnimation = new Animation(res['animation'].name, id, res['animation'].repeats, res['animation'].enabled);
         console.log(this.currentAnimation);
         this.frames = res['animation'].frames;
         this.currentFrame = this.frames[0];
@@ -260,4 +290,24 @@ export class TestComponent implements OnInit {
     return this.currentColor.red.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.green.toString(16).padStart(2, '0').toUpperCase()+this.currentColor.blue.toString(16).padStart(2, '0').toUpperCase(); 
   }
 
+
+
+  //sends framelist to backend
+  private duplicateLoading: boolean;
+  duplicate() {
+    this.http.post("http://192.168.178.231:3000/animation/create", {name: this.currentAnimation.name + " 2"}).subscribe(res => {
+       console.log(res);
+       this.id = res['id'];
+       this.currentAnimation.animationId = this.id;
+       this.currentAnimation.name = res['name'];
+       this.location.replaceState("/animation/" + this.id + "/editor");
+       this.duplicateLoading = false;
+       this.sendRequest();
+    });
+  }
+  
+
+  getWidth(): number {
+    return ((this.document.getElementById('name-input') as any).value.length+1) * 20;
+  }
 }

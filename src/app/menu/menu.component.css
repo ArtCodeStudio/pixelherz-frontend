@@ -2,7 +2,6 @@
     height: 40px;
     width: calc(100% - 20px);
     margin: 10px;
-    border: solid black 1px;
     vertical-align: middle;
 }
 
@@ -10,14 +9,7 @@
     font-size: 1.5em;
     height: 40px;
     display: inline-block;
-    vertical-align: baseline;
     width: calc(100% - 70px);;
-}
-.new {
-    border: dotted gray 1px;
-}
-.selected {
-    border: solid black 1px;
 }
 
 .selected {
@@ -34,16 +26,48 @@
     margin: 5px;
 }
 
-.new .text {
-    vertical-align: inherit;
+.checkbox-container {
+    user-select: none;
+    display: inline-block;
+    height: 30px;
+    width: 40px;
+    font-size: 35px;
 }
-.controls .text span {
-    vertical-align: middle;
-    margin-left: 20px;
+
+.text {
+    vertical-align: super;
+}
+.checkbox-container i {
+    vertical-align: baseline;
+    font-size: 30px;
+    margin: 5px;
+}
+
+.new .text {
+    vertical-align: baseline;
 }
 .controls .text:focus {
     outline: none;
 }
+
+.pixels {
+    height: 240px;
+    width: 240px;
+    padding: 1px;
+    margin: 5px;
+    border: solid black 1px;
+    
+    cursor: pointer;
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 0;
+}
+.pixel {
+    width:30px;
+    height:30px;
+    display: inline-block;
+}
+
 .controls .text:hover {
     cursor: pointer;
 }
@@ -58,7 +82,6 @@
 .animations {
     width: 450px;
     height: calc(100%);
-    border: solid 1px black;
     overflow-y: auto;
     overflow-x: hidden;
     margin: 10px;
@@ -74,5 +97,4 @@
     max-width: 600px;
     min-width: 400px;
     flex: 2;
-    border: solid 1px black;
 }
