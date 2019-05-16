@@ -4,7 +4,7 @@ import { MatrixCell } from '../obj/matrix-cell';
 import { Frame } from '../obj/frame';
 import { Color } from '../obj/color';
 import { Animation } from '../obj/animation';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {Location} from '@angular/common';
 import {DOCUMENT} from '@angular/common';
 import { flushMicrotasks } from '@angular/core/testing';
@@ -34,29 +34,18 @@ export class TestComponent implements OnInit {
 
   private editName: boolean = false;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private location: Location, @Inject(DOCUMENT) private document: Document) {}
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private location: Location, @Inject(DOCUMENT) private document: Document) {}
 
   ngOnInit() {
     this.changes = false;
-  
-
     this.frames = [];
-
-
-    //loads default color palette
     this.colors = Array();
-    for(let i = 0; i < 8; i++) {
-      this.colors[i] = new Color(255, 255, 255);
-    }
+
     this.currentColor = this.colors[0];
 
     this.route.params.subscribe(async params => {
       this.id = Number(params['id']);
-      
       await this.loadAnimation(this.id); // (+) converts string 'id' to a number
-
-
-
     });
   }
 
@@ -186,6 +175,7 @@ export class TestComponent implements OnInit {
     this.frames[this.frames.length] = frame;
     this.changes = true;
     this.loadFrame(frame);
+    this.sendRequest();
   }
 
   switchMode() {
@@ -231,7 +221,7 @@ export class TestComponent implements OnInit {
 
   sendRequest() {
     this.loading = true;
-    this.http.post("http://192.168.178.231:3000/animation/update/", {animationId:this.id, frames:this.frames, name:this.currentAnimation.name, repeats: this.currentAnimation.repeats}).subscribe(res => {
+    this.http.post("http://192.168.178.231:3000/animation/update/", {animationId:this.id, frames:this.frames, name:this.currentAnimation.name, repeats: this.currentAnimation.repeats, enabled: this.currentAnimation.enabled, colors: this.colors}).subscribe(res => {
       console.log(res);
       this.loading = false;
       this.changes = false;
@@ -242,14 +232,24 @@ export class TestComponent implements OnInit {
   async loadAnimation(id: any) {
     await this.http.get("http://192.168.178.231:3000/animation?id="+id).subscribe(res => {
       console.log(res);
-      if(res['animation'] !== undefined && res['animation'].frames.length > 0) {
+      if(res['animation'] !== undefined) {
+        this.colors = res['animation'].colors;
+        for(let i = this.colors.length; i < 8; i++) {
+          this.colors[i] = new Color(i, 255, 255, 255);
+        }
+        this.currentColor = this.colors[0];
+        
         this.currentAnimation = new Animation(res['animation'].name, id, res['animation'].repeats, res['animation'].enabled);
         console.log(this.currentAnimation);
+        if(res['animation'].frames.length < 1) {
+          console.log("empty");
+          this.addFrame();
+          return;
+        }
         this.frames = res['animation'].frames;
+        
         this.currentFrame = this.frames[0];
-      } else {
-        console.log("empty");
-        this.addFrame();
+        
       }
 
     });
@@ -295,19 +295,31 @@ export class TestComponent implements OnInit {
   //sends framelist to backend
   private duplicateLoading: boolean;
   duplicate() {
-    this.http.post("http://192.168.178.231:3000/animation/create", {name: this.currentAnimation.name + " 2"}).subscribe(res => {
-       console.log(res);
-       this.id = res['id'];
-       this.currentAnimation.animationId = this.id;
-       this.currentAnimation.name = res['name'];
-       this.location.replaceState("/animation/" + this.id + "/editor");
-       this.duplicateLoading = false;
-       this.sendRequest();
-    });
+    if(window.confirm('Do you really want to leave the editor? You have unsaved changes left.')) {
+      this.http.post("http://192.168.178.231:3000/animation/create", {name: this.currentAnimation.name + " 2"}).subscribe(res => {
+        console.log(res);
+        this.id = res['id'];
+        this.currentAnimation.animationId = this.id;
+        this.currentAnimation.name = res['name'];
+        this.location.replaceState("/animation/" + this.id + "/editor");
+        this.duplicateLoading = false;
+        this.sendRequest();
+      });
+    }
   }
   
 
   getWidth(): number {
     return ((this.document.getElementById('name-input') as any).value.length+1) * 20;
+  }
+
+  navigateBack() {
+    if(this.changes) {
+      if(window.confirm('Do you really want to leave the editor? You have unsaved changes left.')) {
+        this.router.navigate(['']);
+      }
+    } else {
+      this.router.navigate(['']);
+    }
   }
 }

@@ -1,3 +1,3 @@
 export class Color {
-    constructor(public red: number, public green: number, public blue: number) {}
+    constructor(public position: number, public red: number, public green: number, public blue: number) {}
 }

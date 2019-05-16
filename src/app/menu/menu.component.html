@@ -1,19 +1,44 @@
+<h1 class="heading">pixelherz cp</h1>
 <div class="content">
+
   <div class="animations">
-    <div class="controls" *ngFor="let animation of animations" [ngClass]="{'selected': currentAnimation == animation}">
-      <div class="checkbox-container" (click)="changeEnabled(animation)">
-        <i *ngIf="animation.enabled === false" class="material-icons">check_box_outline_blank</i>
-        <i *ngIf="animation.enabled === true" class="material-icons">check_box</i>
-      </div>  
-      <div class="text" (click)="selectAnimation(animation)">
-        <span class="name">{{animation.name}}</span>
+    <div cdkDropList class="animation-list" (cdkDropListDropped)="drop($event)">
+      <div cdkDrag class="controls" *ngFor="let animation of animations" [ngClass]="{'selected': currentAnimation == animation}">
+        <div class="checkbox-container" (click)="changeEnabled(animation)">
+          <i *ngIf="!animation.enabled" class="material-icons">check_box_outline_blank</i>
+          <i *ngIf="animation.enabled" class="material-icons">check_box</i>
+        </div>  
+        <div class="text-container" (click)="selectAnimation(animation)" >
+          <span class="text">{{animation.name}}</span>
+        </div>
+        <div class="dropdown">
+          <div style="display: inline-block;">
+              <input max="99" class="repeats-input" id="repeats-input" min="1" type="number" [ngModel]="animation.repeats.toString().padStart(2, '0')" (ngModelChange)="animation.repeats = $event; updateRepeats(animation)">  
+              <label for="repeats-input">Wdh.</label>        
+          </div>
+          <button [routerLink]="['animation', animation.animationId, 'editor']"><i class="material-icons">brush</i></button>
+          <button (click)="delete(animation)"><i class="material-icons">delete</i></button>
+        </div>
       </div>
     </div>
     <div class="controls new">
-      <i class="material-icons">add</i>
-      <div class="text" (click)="selectAnimation(animation)">
-        <span class="name">Neue Animation</span>
-      </div>
+      <ng-container *ngIf="animationNameEditor">
+        <i class="material-icons">add</i>
+        <div class="text" (click)="newAnimation()">
+          <input #newNameInput class="text-input" id="new-name-input" type="text" [(ngModel)]="newName">  
+        </div>
+        <div class="button-right">
+            <i (click)="createAnimation()" class="material-icons">check</i>
+            <i (click)="animationNameEditor = false" class="material-icons">close</i>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!animationNameEditor">
+        <i class="material-icons">add</i>
+        <div id="new-name" class="text" (click)="newAnimation()">
+          <span id="new-name-text" class="name">Neue Animation</span>
+        </div>
+      </ng-container>
+  
     </div>
   </div>
 

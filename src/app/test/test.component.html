@@ -1,22 +1,17 @@
-<div class="heading controls">
+<div *ngIf="currentAnimation" class="heading controls">
+    <button (click)="navigateBack()"><i class="material-icons">navigate_before</i></button>
 
-    <button [routerLink]="['']"><i class="material-icons">navigate_before</i></button>
+    <input class="text-input" type="text"[(ngModel)]="currentAnimation.name" (ngModelChange)="this.changes = true">  
 
-    <input class="text-input" type="text" [(ngModel)]="currentAnimation.name" (ngModelChange)="this.changes = true">  
-
-    <!--<div class="repeats-group">
-      <h1 id="repeats" (click)="editRepeats = true" *ngIf="currentAnimation && !editRepeats">{{currentAnimation.repeats}}</h1>
-      <input autofocus id="repeats-input" min="0" type="number" *ngIf="editRepeats" [(ngModel)]="currentAnimation.repeats" (ngModelChange)="this.changes = true">  
-    </div>-->
     <div class="right">
         <button (click)="duplicate()" [disabled]="duplicateLoading"><i class="material-icons">add_to_photos</i></button>
         <button (click)="sendRequest()" [ngClass]="{'loading': loading}" [disabled]="loading"><i class="material-icons">cloud_upload</i></button>
-        <input max="99" class="repeats-input" *ngIf="currentAnimation" id="repeats-input" min="1" type="number" [ngModel]="currentAnimation.repeats.toString().padStart(2, '0')" (ngModelChange)="this.changes = true; currentAnimation.repeats = $event">  
+        <input max="99" class="repeats-input" id="repeats-input" min="1" type="number" [ngModel]="currentAnimation.repeats.toString().padStart(2, '0')" (ngModelChange)="this.changes = true; currentAnimation.repeats = $event">  
         <label for="repeats-input">Wdh.</label>    
     </div>
   </div>
 
-<div class="content">
+<div *ngIf="currentAnimation" class="content">
   <div class="designer" >
     <div class="controls matrix-controls">
       <button class="button-right" (click)="clear()"><i class="material-icons">close</i></button>
@@ -36,7 +31,7 @@
         </ng-container>
       </ng-container>
     </div>
-    <div class="color-palette">
+    <div class="color-palette" *ngIf="colors">
         <div class="color" *ngFor="let color of colors" (click)="selectColor(color)" [ngClass]="{'active': this.currentColor == color}">
           <div [ngStyle]="{'background-color': 'rgb('+color.red+', '+color.green+', '+color.blue+')'}" class="color-element"></div>
         </div>
