@@ -13,8 +13,8 @@
         </div>
         <div class="dropdown">
           <div style="display: inline-block;">
-              <input max="99" class="repeats-input" id="repeats-input" min="1" type="number" [ngModel]="animation.repeats.toString().padStart(2, '0')" (ngModelChange)="animation.repeats = $event; updateRepeats(animation)">  
-              <label for="repeats-input">Wdh.</label>        
+              <input max="99" class="repeats-input" id="repeats-input-{{animation.animationId}}" min="1" type="number" [ngModel]="animation.repeats.toString().padStart(2, '0')" (ngModelChange)="animation.repeats = $event; updateRepeats(animation)">  
+              <label for="repeats-input-{{animation.animationId}}">Wdh.</label>        
           </div>
           <button [routerLink]="['animation', animation.animationId, 'editor']"><i class="material-icons">brush</i></button>
           <button (click)="delete(animation)"><i class="material-icons">delete</i></button>
